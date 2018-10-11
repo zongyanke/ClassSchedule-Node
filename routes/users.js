@@ -1,5 +1,4 @@
 var express = require('express');
-var path = require('path');
 var fs=require('fs');
 var multiparty=require('multiparty');
 var server=require('./server.js')
