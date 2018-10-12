@@ -14,10 +14,15 @@ module.exports={
 		classroomused=limit[4];
 		this.writeout_1(limit);
     },
-	writeout_1:function (){
+	writeout_1:function (limit){
 		var teacher=xlsx.parse('./public/file/teacher.xlsx');
-		var arr="1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n";
-		//for(var)
+		var arr="";//="1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n";
+		for(var i=0;i<limit[0];++i){
+			for(var j=0;j<limit[1];++j){
+				arr=arr+"1 ";
+			}
+			arr=arr+"\r\n";
+		}
 		fs.writeFileSync('./public/file/out.txt',teacher[0].data[0][0]+"\r\n"+arr+teacher[0].data[0][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
@@ -50,7 +55,7 @@ module.exports={
 			}
 			++flag;
 		}
-		console.log(teacher_count_array);
+		//console.log(teacher_count_array);
 		this.writeout_2();
 	},
 	writeout_2:function(){
