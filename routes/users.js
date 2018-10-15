@@ -132,7 +132,7 @@ router.post("/test",function(req,res){
 
 router.get("/getlist",function(req,res){
     server.initCouTeaList(function(data){
-        res.status(0).send(JSON.stringify(data));
+        res.send(JSON.stringify(data));
     });
 });
 
@@ -148,7 +148,7 @@ router.get("/get_timetable",function(req,res){
     else{
         //type=0是course，type=1是teacher
         server.get_timetable(data,function(json){
-            res.status(0).send(JSON.stringify(json));
+            res.send(JSON.stringify(json));
     });
     }
 });
