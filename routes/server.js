@@ -254,5 +254,24 @@ module.exports={
 				callback();
 			}
 		});
+	},
+	get_schedule:function(data,callback){
+		var schedule=[];
+		fs.readFile("./public/file/table.txt",'utf-8',function(err,data){
+        	if(err){
+            	console.log("error");
+			}
+			else{
+            	//将文件按行分割一下
+				data=data.split("\r\n\r\n\r\n\r\n-----------------\r\n\r\n\r\n");
+            	for(var i=0;i<data.length-1;++i){
+					//data[i]=data[i].split(" ");
+					schedule[i]=data[i];
+					schedule[i]=schedule[i].split("\r\n\r\n");
+					console.log(schedule[i]);
+				}
+				
+			}
+		});
 	}
 }

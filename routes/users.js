@@ -99,7 +99,7 @@ router.post("/upload",function(req,res){
 });
 
 router.post("/limit",function(req,res){
-    var limit=[req.query.day,req.query.course,req.query.classroom,req.query.capacity,req.query.class];
+    var limit=[req.body.day,req.body.course,req.body.classroom,req.body.capacity,req.body.class];
     if(limit[0]==""||limit[1]==""||limit[2]==""||limit[3]==""||limit[4]==""){
         var json={
             "code":404,
@@ -129,7 +129,7 @@ router.get("/getlist",function(req,res){
 });
 
 router.get("/get_timetable",function(req,res){
-    var data=[req.query.id,req.query.name,req.query.type];
+    var data=[req.body.id,req.body.name,req.body.type];
     //type=0是course，type=1是teacher
     server.get_timetable(data,function(json){
         res.send(JSON.stringify(json));
@@ -137,8 +137,8 @@ router.get("/get_timetable",function(req,res){
 });
 
 router.post("/write_timetable",function(req,res){
-    var data=[req.query.id,req.query.name,req.query.type];
-    var timetable=req.body;
+    var data=[req.body.id,req.body.name,req.body.type];
+    var timetable=req.body.timetable;
     //console.log(timetable);
     //type=0是course，type=1是teacher
     server.write_timetable(data,timetable,function(){
@@ -156,6 +156,9 @@ router.get("/get_schedule",function(req,res){
         "code":0,
         "msg":"获取课程表成功"
     };
+    server.get_schedule(req,function(){
+        console.log("yes");
+    });
     res.send(JSON.stringify(json));
 });
 module.exports = router;
