@@ -4,6 +4,14 @@ var multiparty=require('multiparty');
 var server=require('./server.js')
 var router = express.Router();
 
+//跨域访问
+router.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+  });
+
 //注册
 router.post("/register",function(req,res){ 
     if(req.body.id==""||req.body.password_1==""||req.body.password_2==""||req.body.password_1!=req.body.password_2){
