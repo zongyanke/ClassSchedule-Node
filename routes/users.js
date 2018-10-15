@@ -110,7 +110,7 @@ router.post("/limit",function(req,res){
     var limit=[req.body.day,req.body.course,req.body.classroom,req.body.capacity,req.body.class];
     if(limit[0]==""||limit[1]==""||limit[2]==""||limit[3]==""||limit[4]==""){
         var json={
-            "code":404,
+            "code":403,
             "msg":"empty limit"
         };
         res.send(JSON.stringify(json));
@@ -118,7 +118,7 @@ router.post("/limit",function(req,res){
     else{
         server.writeout_0(limit);
         var json={
-            "code":403,
+            "code":0,
             "msg":"limit success"
         };
         res.send(JSON.stringify(json));
@@ -140,7 +140,7 @@ router.get("/get_timetable",function(req,res){
     var data=[req.body.id,req.body.name,req.body.type];
     //type=0是course，type=1是teacher
     server.get_timetable(data,function(json){
-        res.send(JSON.stringify(json));
+        res.status(0).send(JSON.stringify(json));
     });
 });
 
