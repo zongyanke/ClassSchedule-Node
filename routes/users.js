@@ -132,16 +132,25 @@ router.post("/test",function(req,res){
 
 router.get("/getlist",function(req,res){
     server.initCouTeaList(function(data){
-        res.send(JSON.stringify(data));
+        res.status(0).send(JSON.stringify(data));
     });
 });
 
 router.get("/get_timetable",function(req,res){
     var data=[req.body.id,req.body.name,req.body.type];
-    //type=0是course，type=1是teacher
-    server.get_timetable(data,function(json){
-        res.status(0).send(JSON.stringify(json));
+    if(limit[0]==""||limit[1]==""||limit[2]==""||limit[3]==""||limit[4]==""){
+        var json={
+            "code":403,
+            "msg":"error"
+        };
+        res.send(JSON.stringify(json));
+    }
+    else{
+        //type=0是course，type=1是teacher
+        server.get_timetable(data,function(json){
+            res.status(0).send(JSON.stringify(json));
     });
+    }
 });
 
 router.post("/write_timetable",function(req,res){

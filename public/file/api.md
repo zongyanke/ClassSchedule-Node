@@ -149,9 +149,7 @@ api测试地址<https://apizza.net/console/project/7854d2039c00bab862ed5f3e31a22
 
         错误码	说明
          0      成功
-		 400    链接错误
-		 403    格式错误（？需要告诉他格式有错误吗）
-		 500    服务器或数据库错误
+		 403    某个输入错误
 ### 7. 修改某课程或者某老师的timetable
 
  - 路径：./users/write_timetable
