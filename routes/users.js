@@ -137,7 +137,7 @@ router.get("/getlist",function(req,res){
 });
 
 router.get("/get_timetable",function(req,res){
-    var data=[req.query.id,req.query.name,req.query.type];
+    var data=[req.body.id,req.body.name,req.body.type];
     if(data[0]==""||data[1]==""||data[2]==""){
         var json={
             "code":403,
@@ -147,7 +147,7 @@ router.get("/get_timetable",function(req,res){
     }
     else{
         //type=0是course，type=1是teacher
-        server.get_timetable(data,function(json){
+        server.get_timetable(req.body.timetable,function(json){
             res.send(JSON.stringify(json));
     });
     }
