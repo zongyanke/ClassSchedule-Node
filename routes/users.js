@@ -137,8 +137,8 @@ router.get("/getlist",function(req,res){
 });
 
 router.get("/get_timetable",function(req,res){
-    var data=[req.body.id,req.body.name,req.body.type];
-    if(limit[0]==""||limit[1]==""||limit[2]==""||limit[3]==""||limit[4]==""){
+    var data=[req.query.id,req.query.name,req.query.type];
+    if(data[0]==""||data[1]==""||data[2]==""){
         var json={
             "code":403,
             "msg":"error"
