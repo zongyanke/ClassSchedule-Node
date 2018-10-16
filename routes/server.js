@@ -233,7 +233,6 @@ module.exports={
 					data[temp]=str;
 					++temp;
 				};
-				console.log(data);
 				var k=0;
 				while(k<data.length-1){
 					fs.writeFileSync('./public/file/out_1.txt',data[k++]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
