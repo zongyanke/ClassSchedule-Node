@@ -107,7 +107,7 @@ router.post("/upload",function(req,res){
 });
 
 router.post("/limit",function(req,res){
-    var limit=[req.body.day,req.body.course,req.body.classroom,req.body.capacity,req.body.class];
+    var limit=[req.query.day,req.query.course,req.query.classroom,req.query.capacity,req.query.class];
     if(limit[0]==""||limit[1]==""||limit[2]==""||limit[3]==""||limit[4]==""){
         var json={
             "code":403,

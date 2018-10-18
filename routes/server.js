@@ -87,6 +87,8 @@ module.exports={
 				});
 				j=0;
 			}
+			if(student[0].data[i+1][0]==undefined||student[0].data[i+1][1]==undefined)
+				break;
 		}
 	},
 	judgeUser:function(params,callback){

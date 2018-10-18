@@ -57,22 +57,22 @@
 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
 6 数学 
-0 0 0 1 1 1 1 1 1 
-0 1 1 1 1 1 1 1 1 
-0 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
 6
 8 祈嫚儿 1 
-1 , 1 , 1 , 1 , 1 
-1 , 1 , 1 , 1 , 1 
-1 , 1 , 1 , 1 , 1 
-1 , 1 , 1 , 1 , 1 
-1 , 1 , 1 , 1 , 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
 9 謇梦菲 1 
 1 1 1 1 1 1 1 1 1 
-1 1 1 1 1 0 1 1 1 
-1 1 1 0 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
 10 鱼志诚 1 
@@ -248,11 +248,11 @@
 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
 34 关亭月 1 
-{ undefined undefined undefined undefined undefined undefined undefined undefined 
-" undefined undefined undefined undefined undefined undefined undefined undefined 
-t undefined undefined undefined undefined undefined undefined undefined undefined 
-i undefined undefined undefined undefined undefined undefined undefined undefined 
-m undefined undefined undefined undefined undefined undefined undefined undefined 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 
 35 陈显达 1 
 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 
@@ -994,4 +994,3 @@ m undefined undefined undefined undefined undefined undefined undefined undefine
 608 白玉龙 十二班 politics physics chemistry 
 609 杜梅 十二班 biology history physics 
 610 王佳慧 十二班 geography history politics 
-611 杜晨羽 十二班 politics physics history 
