@@ -54,8 +54,10 @@ module.exports={
 				++j;
 			}
 			++flag;
+			if(i==teacher[0].data.length||teacher[0].data[i][0]==undefined||teacher[0].data[i][1]==undefined)
+				break;
 		}
-		//console.log(teacher_count_array);
+		console.log("yea");
 		this.writeout_2();
 	},
 	writeout_2:function(){
