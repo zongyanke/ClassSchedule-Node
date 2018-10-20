@@ -116,7 +116,6 @@ module.exports={
 			callback(0);
 		})
 	},
-
 	writeUser:function(params,callback){
 		//现将json文件读出来
 		fs.readFile('./public/file/user.json',function(err,data){
@@ -175,6 +174,7 @@ module.exports={
 		callback(json);
 	},
 	get_timetable:function(data_,callback){
+		var that=this;
 		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
         	if(err){
             	console.log("error");
@@ -194,8 +194,10 @@ module.exports={
 					for(var j=0;j<data[0][0];++j){
 						json[j]=data[i++];
 						json[j].length=data[0][1];
-					}
-					return callback(json);
+					};
+					that.transfer(json,function(json_transfer){
+						return callback(json_transfer);
+					});
 				}
 				if(data_[0]==data[i][0]&&data_[1]==data[i][1]&&data_[2]==1){
 					++i;
@@ -204,10 +206,32 @@ module.exports={
 						json[j]=data[i++];
 						json[j].length=data[0][1];
 					}
-					return callback(json);
+					that.transfer(json,function(json_transfer){
+						return callback(json_transfer);
+					});
 				}	
 			}
 		});
+	},
+	transfer:function(json,callback){
+		console.log("ok");
+		var json_transfer="";
+		//i是行，j是列
+		for(var j=0;j<json[0].length;++j){
+			for(var k=0;k<json.length;++k){
+				json_transfer=json_transfer+json[k][j]+" ";
+				//console.log(json[j][i]);
+			};
+			json_transfer=json_transfer+"\r\n";
+		};
+		json_transfer=json_transfer.split("\r\n");
+		json_transfer.length=json[0].length;
+		console.log(json_transfer);
+		for(var j=0;j<json_transfer.length;++j){
+			json_transfer[j]=json_transfer[j].split(" ");
+			json_transfer[j].length=json.length;
+		};
+		callback(json_transfer);
 	},
 	write_timetable:function(data_,timetable,callback){
 		fs.readFile("./public/fexecutefile/out.txt",'utf-8',function(err,data){
