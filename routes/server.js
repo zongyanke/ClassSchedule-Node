@@ -206,15 +206,13 @@ module.exports={
 						json[j]=data[i++];
 						json[j].length=data[0][1];
 					}
-					that.transfer(json,function(json_transfer){
-						return callback(json_transfer);
-					});
+					console.log(json);
+					return callback(json);
 				}	
 			}
 		});
 	},
 	transfer:function(json,callback){
-		console.log("ok");
 		var json_transfer="";
 		//i是行，j是列
 		for(var j=0;j<json[0].length;++j){
@@ -290,6 +288,7 @@ module.exports={
 	},
 	get_schedule:function(id_type,callback){
 		var schedule=[];
+		var that=this;
 		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,count){
         	if(err){
             	console.log("error");
@@ -308,7 +307,6 @@ module.exports={
 					data[0]=data[0].split("\r\n\r\n");
 					data[1]=data[1].split("\r\n\r\n");
 					data[2]=data[2].split("\r\n\r\r\n----------\r\r\n");
-					console.log(data[2]);
 					if(id_type[1]==0){
 						for(var i=0;i<data[0].length;++i){
 							var temp=data[0][i].split(" ");
@@ -318,57 +316,56 @@ module.exports={
 									//schedule=schedule+temp[j]+"\r\n";
 									schedule[j-1]=temp[j].split("|");
 								};
-								var json={
+								that.transfer_schedule(schedule,function(json_transfer){
+									var json={
 									"code":0,
 									"msg":"查询课表成功",
-									"schedule":schedule
-								};
-								callback(json);
-								return;
+									"schedule":json_transfer
+									};
+									callback(json);
+									return;
+								});
 							}
 						}
 					}
 					else if(id_type[1]==1){
 						for(var i=0;i<data[1].length;++i){
 							var temp=data[1][i].split(" ");
-							//console.log(temp);
 							if(id_type[0]==temp[1]){
 								temp=data[1][i].split("\r\n");
-								//console.log(temp);
 								for(var j=1;j<temp.length;++j){
-									//schedule=schedule+temp[j]+"\r\n";
 									schedule[j-1]=temp[j].split("|");
 								}
-								var json={
+								that.transfer_schedule(schedule,function(json_transfer){
+									var json={
 									"code":0,
 									"msg":"查询课表成功",
-									"schedule":schedule
-								};
-								callback(json);
-								return;
+									"schedule":json_transfer
+									};
+									callback(json);
+									return;
+								});
 							}
 						}
 					}
 					else if(id_type[1]==2){
-						//console.log(data[2]);
 						for(var i=0;i<data[2].length;++i){
 							var temp=data[2][i].split("\r\n");
-							//console.log(temp);
 							temp[0]=temp[0].split("  ");
-							//console.log(temp[0]);
 							if(id_type[0]==temp[0][1]){
 								temp=data[2][i].split("\r\n");
 								for(var j=1;j<temp.length;++j){
 									schedule[j-1]=temp[j].split("|");
 								}
-								console.log(schedule);
-								var json={
+								that.transfer_schedule(schedule,function(json_transfer){
+									var json={
 									"code":0,
 									"msg":"查询课表成功",
-									"schedule":schedule
-								};
-								callback(json);
-								return;
+									"schedule":json_transfer
+									};
+									callback(json);
+									return;
+								});
 							}
 						}
 					}
@@ -377,15 +374,27 @@ module.exports={
 						"msg":"无此课表"
 					};
 					callback(json);
-					// for(var i=0;i<data.length;++i){
-					// 	//data[i]=data[i].split(" ");
-					// 	schedule[i]=data[i];
-					// 	schedule[i]=schedule[i].split("\r\n");
-					// 	console.log(schedule[i]);
-					// }
 				}
 			});
 		});
+	},
+	transfer_schedule:function(json,callback){
+		var json_transfer="";
+		//i是行，j是列
+		for(var j=0;j<json[0].length;++j){
+			for(var k=0;k<json.length;++k){
+				json_transfer=json_transfer+json[k][j]+"|";
+				//console.log(json[j][i]);
+			};
+			json_transfer=json_transfer+"\r\n";
+		};
+		json_transfer=json_transfer.split("\r\n");
+		json_transfer.length=json[0].length;
+		for(var j=0;j<json_transfer.length;++j){
+			json_transfer[j]=json_transfer[j].split("|");
+			json_transfer[j].length=json.length;
+		};
+		callback(json_transfer);
 	},
 	run:function(callback){
 		child_process.execFile('class.bat',null,{cwd:'./public/executefile/'},function(error, stdout, stderr){
