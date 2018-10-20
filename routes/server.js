@@ -1,12 +1,13 @@
 var fs = require('fs');
 var xlsx = require('node-xlsx');
+var child_process=require('child_process');
 var classroomused=12;
 var classroomcontain=50;
 var teacher_count_array=[];
 var subject=["语文","数学","英语","物理","化学","生物","政治","历史","地理"];
 module.exports={
 	writeout_0:function(limit){
-		fs.writeFileSync('./public/file/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+		fs.writeFileSync('./public/executefile/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
 	     	}
@@ -23,7 +24,7 @@ module.exports={
 			}
 			arr=arr+"\r\n";
 		}
-		fs.writeFileSync('./public/file/out.txt',teacher[0].data[0][0]+"\r\n"+arr+teacher[0].data[0][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+		fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[0][0]+"\r\n"+arr+teacher[0].data[0][1]+"\r\n"+"***\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
          	}else{
@@ -38,14 +39,14 @@ module.exports={
 			var j=0;
 			teacher_count=teacher[0].data[i][1];
 			teacher_count_array[k++]=teacher_count;
-			fs.writeFileSync('./public/file/out.txt',teacher[0].data[i][0]+" "+subject[flag]+" \r\n"+arr+teacher[0].data[i][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+			fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[i][0]+" "+subject[flag]+" \r\n"+arr+teacher[0].data[i][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 				if(err){
 					console.log("文件写入失败")
 				}
 			});
-			++i;
+			++i; 
 			while(j<teacher_count){
-				fs.writeFileSync('./public/file/out.txt',+teacher[0].data[i][0]+" "+teacher[0].data[i][1]+" "+teacher[0].data[i][2]+" \r\n"+arr,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+				fs.writeFileSync('./public/executefile/out.txt',+teacher[0].data[i][0]+" "+teacher[0].data[i][1]+" "+teacher[0].data[i][2]+" \r\n"+arr,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 					if(err){
 						console.log("文件写入失败")
 					}
@@ -57,12 +58,17 @@ module.exports={
 			if(i==teacher[0].data.length||teacher[0].data[i][0]==undefined||teacher[0].data[i][1]==undefined)
 				break;
 		}
-		console.log("yea");
+		fs.writeFileSync('./public/executefile/out.txt',"*****\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+			if(err){
+				console.log("文件写入失败")
+			}
+		});
+		//console.log("yea");
 		this.writeout_2();
 	},
 	writeout_2:function(){
 		var student = xlsx.parse('./public/file/Student.xlsx');
-    	fs.writeFileSync('./public/file/out.txt',classroomused+"\r\n"+50+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+    	fs.writeFileSync('./public/executefile/out.txt',classroomused+"\r\n"+50+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
          	}
@@ -74,7 +80,7 @@ module.exports={
 		var last_count=student[0].data.length%classroomcontain;
 		while(i<student[0].data.length){
 			var data=student[0].data[i][0]+" "+student[0].data[i][1]+" "+student[0].data[i][2]+" "+student[0].data[i][3]+" "+student[0].data[i][4]+" "+student[0].data[i][5]+" \r\n";
-			fs.writeFileSync('./public/file/out.txt',data,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+			fs.writeFileSync('./public/executefile/out.txt',data,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 				if(err){
 					console.log("文件写入失败")
 				}
@@ -82,7 +88,7 @@ module.exports={
 			++j;
 			++i;
 			if(j==50&&i<student[0].data.length){
-				fs.writeFileSync('./public/file/out.txt',50+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+				fs.writeFileSync('./public/executefile/out.txt',50+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 					if(err){
 						console.log("文件写入失败")
 					}
@@ -169,7 +175,7 @@ module.exports={
 		callback(json);
 	},
 	get_timetable:function(data_,callback){
-		fs.readFile("./public/file/out.txt",'utf-8',function(err,data){
+		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
         	if(err){
             	console.log("error");
 			}
@@ -204,7 +210,7 @@ module.exports={
 		});
 	},
 	write_timetable:function(data_,timetable,callback){
-		fs.readFile("./public/file/out.txt",'utf-8',function(err,data){
+		fs.readFile("./public/fexecutefile/out.txt",'utf-8',function(err,data){
         	if(err){
             	console.log("error");
 			}
@@ -239,18 +245,18 @@ module.exports={
 				};
 				var k=0;
 				while(k<data.length-1){
-					fs.writeFileSync('./public/file/out_1.txt',data[k++]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+					fs.writeFileSync('./public/executefile/out_1.txt',data[k++]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 						if(err){
 							console.log("文件写入失败")
 						}
 					});
 				}
-				fs.unlink('./public/file/out.txt', function(err) {
+				fs.unlink('./public/executefile/out.txt', function(err) {
 					if (err) 
 						throw err;
 					console.log('文件删除成功');
 				});
-				fs.rename('./public/file/out_1.txt', './public/file/out.txt', function (err) {
+				fs.rename('./public/executefile/out_1.txt', './public/executefile/out.txt', function (err) {
 					if (err) throw err;
 					console.log('重命名完成');
 				});
@@ -258,23 +264,111 @@ module.exports={
 			}
 		});
 	},
-	get_schedule:function(data,callback){
+	get_schedule:function(id_type,callback){
 		var schedule=[];
-		fs.readFile("./public/file/table.txt",'utf-8',function(err,data){
+		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,count){
         	if(err){
             	console.log("error");
 			}
-			else{
-            	//将文件按行分割一下
-				data=data.split("\r\n\r\n\r\n\r\n-----------------\r\n\r\n\r\n");
-            	for(var i=0;i<data.length-1;++i){
-					//data[i]=data[i].split(" ");
-					schedule[i]=data[i];
-					schedule[i]=schedule[i].split("\r\n\r\n");
-					console.log(schedule[i]);
+			//一周天数，每天上课节数
+			var day=count[0];
+			var course=count[2];
+			fs.readFile("./public/executefile/table.txt",'utf-8',function(err,data){
+				if(err){
+					console.log("error");
 				}
-				
+				else{
+					//将文件按行分割一下
+					//data=data.split("\r\r\n----------\r\r\n\r\r\n\r\r\n--------------------\r\r\n\r\r\n\r\r\n");
+					data=data.split("--------------------\r\r\n\r\r\n");
+					data[0]=data[0].split("\r\n\r\n");
+					data[1]=data[1].split("\r\n\r\n");
+					data[2]=data[2].split("\r\n\r\r\n----------\r\r\n");
+					console.log(data[2]);
+					if(id_type[1]==0){
+						for(var i=0;i<data[0].length;++i){
+							var temp=data[0][i].split(" ");
+							if(id_type[0]==temp[1]){
+								temp=data[0][i].split("\r\n");
+								for(var j=1;j<temp.length;++j){
+									//schedule=schedule+temp[j]+"\r\n";
+									schedule[j-1]=temp[j].split("|");
+								};
+								var json={
+									"code":0,
+									"msg":"查询课表成功",
+									"schedule":schedule
+								};
+								callback(json);
+								return;
+							}
+						}
+					}
+					else if(id_type[1]==1){
+						for(var i=0;i<data[1].length;++i){
+							var temp=data[1][i].split(" ");
+							//console.log(temp);
+							if(id_type[0]==temp[1]){
+								temp=data[1][i].split("\r\n");
+								//console.log(temp);
+								for(var j=1;j<temp.length;++j){
+									//schedule=schedule+temp[j]+"\r\n";
+									schedule[j-1]=temp[j].split("|");
+								}
+								var json={
+									"code":0,
+									"msg":"查询课表成功",
+									"schedule":schedule
+								};
+								callback(json);
+								return;
+							}
+						}
+					}
+					else if(id_type[1]==2){
+						//console.log(data[2]);
+						for(var i=0;i<data[2].length;++i){
+							var temp=data[2][i].split("\r\n");
+							//console.log(temp);
+							temp[0]=temp[0].split("  ");
+							//console.log(temp[0]);
+							if(id_type[0]==temp[0][1]){
+								temp=data[2][i].split("\r\n");
+								for(var j=1;j<temp.length;++j){
+									schedule[j-1]=temp[j].split("|");
+								}
+								console.log(schedule);
+								var json={
+									"code":0,
+									"msg":"查询课表成功",
+									"schedule":schedule
+								};
+								callback(json);
+								return;
+							}
+						}
+					}
+					var json={
+						"code":403,
+						"msg":"无此课表"
+					};
+					callback(json);
+					// for(var i=0;i<data.length;++i){
+					// 	//data[i]=data[i].split(" ");
+					// 	schedule[i]=data[i];
+					// 	schedule[i]=schedule[i].split("\r\n");
+					// 	console.log(schedule[i]);
+					// }
+				}
+			});
+		});
+	},
+	run:function(callback){
+		child_process.execFile('class.bat',null,{cwd:'./public/executefile/'},function(error, stdout, stderr){
+			if(error){
+				throw error;
 			}
+			callback();
 		});
 	}
 }

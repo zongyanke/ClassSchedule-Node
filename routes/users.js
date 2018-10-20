@@ -169,14 +169,24 @@ router.post("/write_timetable",function(req,res){
 });
 
 router.get("/get_schedule",function(req,res){
-    //req.query.type==0是学生，req.query.type==1是老师
+    //req.query.type==0是学生，req.query.type==1是老师,req.query.type==2是教室
     var json={
         "code":0,
         "msg":"获取课程表成功"
     };
-    server.get_schedule(req,function(){
-        console.log("yes");
+    var data=[req.query.id,req.query.type];
+    server.get_schedule(data,function(schedule){
+        res.send(JSON.stringify(schedule));
     });
-    res.send(JSON.stringify(json));
 });
+
+router.get("/run",function(req,res){
+    server.run(function(){
+        var json={
+            "code":0,
+            "msg":"排课成功"
+        };
+        res.send(JSON.stringify(json));
+    });
+})
 module.exports = router;
