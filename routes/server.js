@@ -403,5 +403,28 @@ module.exports={
 			}
 			callback();
 		});
+	},
+	get_analysis:function(callback){
+		fs.readFile("./public/executefile/analysis.txt",'utf-8',function(err,data){
+        	if(err){
+            	console.log("error");
+			}
+			data=data.split("\r\n");
+		var analysis=[""];
+		var j=0;
+		for(var i=2;i<data.length;++i){
+			if(data[i]!=""){
+				analysis[j]=data[i];
+				j++;
+			};
+		};
+		var json={
+			"code":0,
+			"msg":"获取分析结果成功",
+			"analysis":analysis
+			};
+		return callback(json);
+		});
 	}
+
 }

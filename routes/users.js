@@ -188,4 +188,10 @@ router.get("/run",function(req,res){
         res.send(JSON.stringify(json));
     });
 });
+
+router.get("/get_analysis",function(req,res){
+    server.get_analysis(function(analysis){
+        res.end(JSON.stringify(analysis));
+    });
+});
 module.exports = router;
