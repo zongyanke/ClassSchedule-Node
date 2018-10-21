@@ -16,7 +16,7 @@ module.exports={
 		this.writeout_1(limit);
     },
 	writeout_1:function(limit){
-		var teacher=xlsx.parse('./public/file/teacher.xlsx');
+		var teacher=xlsx.parse('./public/file/Teacher.xlsx');
 		var arr="";//="1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n";
 		for(var i=0;i<limit[0];++i){
 			for(var j=0;j<limit[1];++j){
@@ -153,7 +153,7 @@ module.exports={
 			}
 		}
 
-		var teacher=xlsx.parse('./public/file/teacher.xlsx');
+		var teacher=xlsx.parse('./public/file/Teacher.xlsx');
 		var k=0;
 		//从第一行开始读取
 		for(var i=1;i<teacher[0].data.length;++i){
@@ -206,8 +206,9 @@ module.exports={
 						json[j]=data[i++];
 						json[j].length=data[0][1];
 					}
-					console.log(json);
-					return callback(json);
+					that.transfer(json,function(json_transfer){
+						return callback(json_transfer);
+					});
 				}	
 			}
 		});
@@ -231,60 +232,63 @@ module.exports={
 		};
 		callback(json_transfer);
 	},
-	write_timetable:function(data_,timetable,callback){
-		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
-        	if(err){
-            	console.log("error");
-			}
-			else{
-				//将文件按行分割一下
-				var tempdata=[];
-            	data=data.split("\r\n");
-            	for(var i=0;i<data.length-1;++i){
-					tempdata[i]=data[i].split(" ");
-				};
-				var temp=0;
-				//读取并返回数组
-				for(var i=0;i<tempdata.length-1;++i){
-					if(data_[1]==tempdata[i][1]&&data_[2]==0){
-						++i;
-						temp=i;
-						break;
-					}
-					if(data_[0]==tempdata[i][0]&&data_[1]==tempdata[i][1]&&data_[2]==1){
-						++i;
-						temp=i;
-						break;
-					}	
-				};
-				for(var i=0;i<tempdata[0][0];++i){
-					var str="";
-					for(var j=0;j<tempdata[0][1];++j){
-						str=str+timetable[i][j]+" ";
-					}
-					data[temp]=str;
-					++temp;
-				};
-				var k=0;
-				while(k<data.length-1){
-					fs.writeFileSync('./public/executefile/out_1.txt',data[k++]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
-						if(err){
-							console.log("文件写入失败")
-						}
-					});
+	write_timetable:function(data_,old_timetable,callback){
+		this.transfer(old_timetable,function(timetable){
+			fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
+				if(err){
+					console.log("error");
 				}
-				fs.unlink('./public/executefile/out.txt', function(err) {
-					if (err) 
-						throw err;
-					console.log('文件删除成功');
-				});
-				fs.rename('./public/executefile/out_1.txt', './public/executefile/out.txt', function (err) {
-					if (err) throw err;
-					console.log('重命名完成');
-				});
-				callback();
-			}
+				else{
+					//将文件按行分割一下
+					var tempdata=[];
+					data=data.split("\r\n");
+					for(var i=0;i<data.length-1;++i){
+						tempdata[i]=data[i].split(" ");
+					};
+					var temp=0;
+					//读取并返回数组
+					for(var i=0;i<tempdata.length-1;++i){
+						if(data_[1]==tempdata[i][1]&&data_[2]==0){
+							++i;
+							temp=i;
+							break;
+						}
+						if(data_[0]==tempdata[i][0]&&data_[1]==tempdata[i][1]&&data_[2]==1){
+							++i;
+							temp=i;
+							break;
+						}	
+					};
+					for(var i=0;i<tempdata[0][0];++i){
+						var str="";
+						for(var j=0;j<tempdata[0][1];++j){
+							str=str+timetable[i][j]+" ";
+						}
+						data[temp]=str;
+						++temp;
+					};
+					var k=0;
+					while(k<data.length-1){
+						fs.writeFileSync('./public/executefile/out_1.txt',data[k++]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+							if(err){
+								console.log("文件写入失败")
+							}
+						});
+					}
+					fs.unlink('./public/executefile/out.txt', function(err) {
+						if (err) 
+							throw err;
+						console.log('文件删除成功');
+					});
+					fs.rename('./public/executefile/out_1.txt', './public/executefile/out.txt', function (err) {
+						if (err) throw err;
+						console.log('重命名完成');
+					});
+					callback();
+				}
+			});
 		});
+		
 	},
 	get_schedule:function(id_type,callback){
 		var schedule=[];
@@ -426,5 +430,4 @@ module.exports={
 		return callback(json);
 		});
 	}
-
 }

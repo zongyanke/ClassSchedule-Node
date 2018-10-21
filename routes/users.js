@@ -107,7 +107,7 @@ router.post("/upload",function(req,res){
 });
 
 router.post("/limit",function(req,res){
-    var limit=[req.query.day,req.query.course,req.query.classroom,req.query.capacity,req.query.class];
+    var limit=[req.body.day,req.body.course,req.body.classroom,req.body.capacity,req.body.class];
     if(limit[0]==""||limit[1]==""||limit[2]==""||limit[3]==""||limit[4]==""){
         var json={
             "code":403,
@@ -156,12 +156,9 @@ router.get("/get_timetable",function(req,res){
 
 router.post("/write_timetable",function(req,res){
     var data=[req.body.id,req.body.name,req.body.type];
-    console.log(req.body.timetable);
-    //var timetable=JSON.parse(req.body.timetable);
-    //console.log(timetable);,
     //type=0是course，type=1是teacher
-    //console.log(JSON.parse(req.body.timetable));
-    var timetable=req.body.timetable;
+    var timetable=JSON.parse(req.body.timetable);
+    console.log(timetable);
     server.write_timetable(data,timetable,function(){
         var json={
             "code":0,
