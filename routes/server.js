@@ -15,7 +15,7 @@ module.exports={
 		classroomused=limit[4];
 		this.writeout_1(limit);
     },
-	writeout_1:function (limit){
+	writeout_1:function(limit){
 		var teacher=xlsx.parse('./public/file/teacher.xlsx');
 		var arr="";//="1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n1 1 1 1 1 1 1 1 1 \r\n";
 		for(var i=0;i<limit[0];++i){
@@ -232,7 +232,7 @@ module.exports={
 		callback(json_transfer);
 	},
 	write_timetable:function(data_,timetable,callback){
-		fs.readFile("./public/fexecutefile/out.txt",'utf-8',function(err,data){
+		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
         	if(err){
             	console.log("error");
 			}
@@ -385,7 +385,7 @@ module.exports={
 			for(var k=0;k<json.length;++k){
 				json_transfer=json_transfer+json[k][j]+"|";
 				//console.log(json[j][i]);
-			};
+			};    
 			json_transfer=json_transfer+"\r\n";
 		};
 		json_transfer=json_transfer.split("\r\n");

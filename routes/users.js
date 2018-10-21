@@ -153,12 +153,15 @@ router.get("/get_timetable",function(req,res){
     }
 });
 
+
 router.post("/write_timetable",function(req,res){
     var data=[req.body.id,req.body.name,req.body.type];
-    var timetable=JSON.parse(req.body.timetable);
+    console.log(req.body.timetable);
+    //var timetable=JSON.parse(req.body.timetable);
     //console.log(timetable);,
     //type=0是course，type=1是teacher
-    console.log(JSON.parse(req.body.timetable));
+    //console.log(JSON.parse(req.body.timetable));
+    var timetable=req.body.timetable;
     server.write_timetable(data,timetable,function(){
         var json={
             "code":0,
