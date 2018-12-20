@@ -5,6 +5,14 @@ var classroomused=12;
 var classroomcontain=50;
 var teacher_count_array=[];
 var subject=["语文","数学","英语","物理","化学","生物","政治","历史","地理"];
+var class_count=[0,0,0,0,0,0];
+var student_count=[];
+student_count[0]=[];
+student_count[1]=[];
+student_count[2]=[];
+student_count[3]=[];
+student_count[4]=[];
+student_count[5]=[];
 module.exports={
 	writeout_0:function(limit){
 		fs.writeFileSync('./public/executefile/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
@@ -63,7 +71,6 @@ module.exports={
 				console.log("文件写入失败")
 			}
 		});
-		//console.log("yea");
 		this.writeout_2();
 	},
 	writeout_2:function(){
@@ -75,11 +82,8 @@ module.exports={
 		});
 		var i=0;
 		var j=0;
-		//暂时没有用上，以后再说
-		var classcount=student[0].data.length/classroomcontain;
-		var last_count=student[0].data.length%classroomcontain;
 		while(i<student[0].data.length){
-			var data=student[0].data[i][0]+" "+student[0].data[i][1]+" "+student[0].data[i][2]+" "+student[0].data[i][3]+" "+student[0].data[i][4]+" "+student[0].data[i][5]+" \r\n";
+			var data=student[0].data[i][0]+" "+student[0].data[i][1]+" "+student[0].data[i][2]+" "+student[0].data[i][3]+" "+student[0].data[i][4]+" "+student[0].data[i][5]+" "+student[0].data[i][7]+" "+student[0].data[i][8]+" "+student[0].data[i][9]+" \r\n";
 			fs.writeFileSync('./public/executefile/out.txt',data,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 				if(err){
 					console.log("文件写入失败")
@@ -95,8 +99,23 @@ module.exports={
 				});
 				j=0;
 			}
-			if(student[0].data[i+1][0]==undefined||student[0].data[i+1][1]==undefined)
-				break;
+		}
+		this.writeout_3();
+	},
+	writeout_3:function(){
+
+		for(var i=0;i<6;++i){
+			if(student_count[i].length!=0){
+				var data=subject[i+3]+" "+class_count[i]+"\r\n";
+				for(var j=0;j<student_count[i].length;++j){
+					data=data+(j+1)+" "+student_count[i][j]+" "+"id"+" "+0+"\r\n";
+				}
+				fs.writeFileSync('./public/executefile/out.txt',data,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+					if(err){
+						console.log("文件写入失败")
+					}
+				});
+			}
 		}
 	},
 	judgeUser:function(params,callback){
@@ -429,5 +448,224 @@ module.exports={
 			};
 		return callback(json);
 		});
+	},
+	sort_subject:function(){
+		var student = xlsx.parse('./public/file/Student.xlsx');
+		var subject_temp=["物理","化学","生物","政治","历史","地理"];
+    	var i=0;
+    	while(i<student[0].data.length){
+			//先编号
+        	for(var j=3;j<6;++j){
+            	for(var k=0;k<6;++k){
+                	if(student[0].data[i][j]==subject_temp[k]){
+                    	student[0].data[i][j]=k;
+                    	break;
+                	}
+            	}
+			}
+			//重排序一次
+        	var t=0;
+     		if(student[0].data[i][3]>student[0].data[i][4]){
+            	t=student[0].data[i][3];
+            	student[0].data[i][3]=student[0].data[i][4];
+            	student[0].data[i][4]=t;
+        	}
+        	if(student[0].data[i][3]>student[0].data[i][5]){
+            	t=student[0].data[i][3];
+            	student[0].data[i][3]=student[0].data[i][5];
+            	student[0].data[i][5]=t;
+        	}
+        	if(student[0].data[i][4]>student[0].data[i][5]){
+            	t=student[0].data[i][4];
+            	student[0].data[i][4]=student[0].data[i][5];
+            	student[0].data[i][5]=t;
+        	}
+			//重新变成汉字
+        	for(var j=3;j<6;++j){
+            	for(var k=0;k<6;++k){
+                	if(student[0].data[i][j]==k){
+                    	student[0].data[i][j]=subject_temp[k];
+                    	break;
+                	}
+            	}
+        	}
+        	++i;
+		}
+		
+		var j=0;
+		while(j<student[0].data.length&&student[0].data[j][0]!=undefined){
+			student[0].data[j][7]=0;
+			student[0].data[j][8]=0;
+			student[0].data[j][9]=0;
+			++j;
+		}
+    
+    	var buffer = xlsx.build([
+        	{
+            	name:'sheet1',
+            	data:student[0].data   
+        	}
+    	]);
+		fs.writeFileSync('./public/file/temp.xlsx',buffer,{'flag':'w'});   //生成excel
+		
+		fs.unlink('./public/file/Student.xlsx', function(err) {
+			if (err) 
+				throw err;
+			console.log('文件删除成功');
+		});
+		fs.rename('./public/file/temp.xlsx', './public/file/Student.xlsx', function (err) {
+			if (err) throw err;
+			console.log('重命名完成');
+		});
+	},
+	get_student_list:function(subject,callback){
+		var subject_temp=["物理","化学","生物","政治","历史","地理"];
+		for(var i=0;i<3;++i){
+			for(var k=0;k<6;++k){
+                if(subject[i]==subject_temp[k]){
+                    subject[i]=k;
+                    break;
+                }
+            }
+		}
+		//重排序一次
+        var t=0;
+     	if(subject[0]>subject[1]){
+            t=subject[0];
+            subject[0]=subject[1];
+            subject[1]=t;
+        }
+        if(subject[0]>subject[2]){
+            t=subject[0];
+            subject[0]=subject[2];
+            subject[2]=t;
+        }
+        if(subject[1]>subject[2]){
+            t=subject[1];
+            subject[1]=subject[2];
+            subject[2]=t;
+		}
+
+		for(var i=0;i<3;++i){
+			for(var k=0;k<6;++k){
+                if(subject[i]==k){
+                    subject[i]=subject_temp[k];
+                    break;
+                }
+            }
+		}
+
+		//取得未安排班级所有学生列表
+		var student = xlsx.parse('./public/file/Student.xlsx');
+		var list=[];
+    	var i=0;
+    	while(i<student[0].data.length){
+			if(student[0].data[i][3]==subject[0]&&student[0].data[i][4]==subject[1]&&student[0].data[i][5]==subject[2]&&student[0].data[i][7]==0){
+				list.push(student[0].data[i]);
+			}
+        	++i;
+		}
+
+		function descend(x,y){
+			return y[6] - x[6];  //按照数组的第7个值降序排列
+		}
+		list.sort(descend);
+
+		var json={
+			"subject_list":subject,
+			"student_count":list.length,
+			"student_list":list
+		}
+		callback(json);
+	},
+	send_chosen_student:function(data,callback){
+		//先将班级分好
+		var subject_temp=["物理","化学","生物","政治","历史","地理"];
+		var class_temp=[0,0,0];
+		for(var i=0;i<3;++i){
+			for(var k=0;k<6;++k){
+                if(data.subject_list[i]==subject_temp[k]){
+					++class_count[k];
+					student_count[k].push(data.student_list.length);
+					class_temp[i]=class_count[k];
+                    break;
+                }
+            }
+		}
+		//排班
+		var student = xlsx.parse('./public/file/Student.xlsx');
+		var i=0;
+		while(i<data.student_list.length){
+			var id=data.student_list[i][0];
+			student[0].data[id-1][7]=class_temp[0];
+			student[0].data[id-1][8]=class_temp[1];
+			student[0].data[id-1][9]=class_temp[2];
+			++i;
+		}
+		var buffer = xlsx.build([
+        	{
+            	name:'sheet1',
+            	data:student[0].data   
+        	}
+    	]);
+		fs.writeFileSync('./public/file/temp.xlsx',buffer,{'flag':'w'});   //生成excel
+		
+		fs.unlink('./public/file/Student.xlsx', function(err) {
+			if (err) 
+				throw err;
+			console.log('文件删除成功');
+		});
+		fs.rename('./public/file/temp.xlsx', './public/file/Student.xlsx', function (err) {
+			if (err) throw err;
+			console.log('重命名完成');
+		});
+		callback();
+	},
+	send_specific_number_student:function(data,callback){
+		var length=data.student_number;
+		if(data.student_number>data.student_list.length){
+			length=data.student_list.length;
+		}
+		//先将班级分好
+		var subject_temp=["物理","化学","生物","政治","历史","地理"];
+		var class_temp=[0,0,0];
+		for(var i=0;i<3;++i){
+			for(var k=0;k<6;++k){
+                if(data.subject_list[i]==subject_temp[k]){
+					++class_count[k];
+					student_count[k].push(length);
+					class_temp[i]=class_count[k];
+                    break;
+                }
+            }
+		}
+		//排班
+		var student = xlsx.parse('./public/file/Student.xlsx');
+		var i=0;
+		while(i<length){
+			var id=data.student_list[i][0];
+			student[0].data[id-1][7]=class_temp[0];
+			student[0].data[id-1][8]=class_temp[1];
+			student[0].data[id-1][9]=class_temp[2];
+			++i;
+		}
+		var buffer = xlsx.build([
+        	{
+            	name:'sheet1',
+            	data:student[0].data   
+        	}
+    	]);
+		fs.writeFileSync('./public/file/temp.xlsx',buffer,{'flag':'w'});   //生成excel
+		
+		fs.unlink('./public/file/Student.xlsx', function(err) {
+			if (err) 
+				throw err;
+			console.log('文件删除成功');
+		});
+		fs.rename('./public/file/temp.xlsx', './public/file/Student.xlsx', function (err) {
+			if (err) throw err;
+			console.log('重命名完成');
+		});
+		callback();
 	}
 }

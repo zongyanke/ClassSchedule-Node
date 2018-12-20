@@ -97,6 +97,7 @@ router.post("/upload",function(req,res){
                     }
                 })
             }
+            server.sort_subject();
             var json={
                 "code":0,
                 "msg":"上传文件成功"
@@ -191,4 +192,32 @@ router.get("/get_analysis",function(req,res){
         res.end(JSON.stringify(analysis));
     });
 });
+
+router.get("/get_student_list",function(req,res){
+    var subject=[req.query.subject_1,req.query.subject_2,req.query.subject_3];
+    server.get_student_list(subject,function(data){
+        res.end(JSON.stringify(data));
+    });
+});
+
+router.post("/send_chosen_student",function(req,res){
+    var data=req.body;
+    server.send_chosen_student(data,function(){
+        res.end(JSON.stringify({
+            "code":0,
+            "msg":"写入成功"
+        }));
+    });
+});
+
+router.post("/send_specific_number_student",function(req,res){
+    var data=req.body;
+    server.send_specific_number_student(data,function(){
+        res.end(JSON.stringify({
+            "code":0,
+            "msg":"写入部分学生成功"
+        }));
+    });
+});
+
 module.exports = router;
