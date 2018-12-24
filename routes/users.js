@@ -159,7 +159,7 @@ router.post("/write_timetable",function(req,res){
     var data=[req.body.id,req.body.name,req.body.type];
     //type=0是course，type=1是teacher
     var timetable=JSON.parse(req.body.timetable);
-    console.log(timetable);
+    console.log(timetable);        
     server.write_timetable(data,timetable,function(){
         var json={
             "code":0,

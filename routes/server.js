@@ -572,6 +572,7 @@ module.exports={
 		list.sort(descend);
 
 		var json={
+			"code":0,
 			"subject_list":subject,
 			"student_count":list.length,
 			"student_list":list
