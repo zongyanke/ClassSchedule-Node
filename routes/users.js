@@ -202,6 +202,8 @@ router.get("/get_student_list",function(req,res){
 
 router.post("/send_chosen_student",function(req,res){
     var data=req.body;
+    //console.log("1"+data);
+    console.log(data);
     server.send_chosen_student(data,function(){
         res.end(JSON.stringify({
             "code":0,
