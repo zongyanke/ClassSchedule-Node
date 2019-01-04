@@ -15,7 +15,14 @@ student_count[4]=[];
 student_count[5]=[];
 module.exports={
 	writeout_0:function(limit){
-		fs.writeFileSync('./public/executefile/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+		fs.writeFileSync('./public/executefile/out.txt',"3 2 2 3 2 3\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+			if(err){
+				console.log("文件写入失败")
+			}else{
+			    console.log("文件写入成功");
+			}
+		});
+		fs.writeFileSync('./public/executefile/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
 	     	}
@@ -32,7 +39,7 @@ module.exports={
 			}
 			arr=arr+"\r\n";
 		}
-		fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[0][0]+"\r\n"+arr+teacher[0].data[0][1]+"\r\n"+"***\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+		fs.writeFileSync('./public/executefile/out.txt',"***\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
          	}else{
@@ -47,7 +54,7 @@ module.exports={
 			var j=0;
 			teacher_count=teacher[0].data[i][1];
 			teacher_count_array[k++]=teacher_count;
-			fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[i][0]+" "+subject[flag]+" \r\n"+arr+teacher[0].data[i][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+			fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[i][0]+" "+subject[flag]+" "+(flag>2?1:0)+" \r\n"+arr+teacher[0].data[i][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 				if(err){
 					console.log("文件写入失败")
 				}
@@ -108,7 +115,7 @@ module.exports={
 			if(student_count[i].length!=0){
 				var data=subject[i+3]+" "+class_count[i]+"\r\n";
 				for(var j=0;j<student_count[i].length;++j){
-					data=data+(j+1)+" "+student_count[i][j]+" "+"id"+" "+0+"\r\n";
+					data=data+(j+1)+" "+student_count[i][j]+" "+0+"\r\n";
 				}
 				fs.writeFileSync('./public/executefile/out.txt',data,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 					if(err){

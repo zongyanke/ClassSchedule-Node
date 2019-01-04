@@ -48,9 +48,6 @@ router.post("/register",function(req,res){
 
 //登陆
 router.post("/login",function(req,res){
-    var id = req.body.id;
-    var password = req.body.password;
-
     var params = {
         "id":req.body.id,
         "password":req.body.password
