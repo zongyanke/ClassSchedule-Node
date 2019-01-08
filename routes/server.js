@@ -15,14 +15,7 @@ student_count[4]=[];
 student_count[5]=[];
 module.exports={
 	writeout_0:function(limit){
-		fs.writeFileSync('./public/executefile/out.txt',"3 2 2 3 2 3\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
-			if(err){
-				console.log("文件写入失败")
-			}else{
-			    console.log("文件写入成功");
-			}
-		});
-		fs.writeFileSync('./public/executefile/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+		fs.writeFileSync('./public/executefile/out.txt',limit[0]+" "+limit[1]+"\r\n"+limit[2]+" "+limit[3]+"\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
          	if(err){
              	console.log("文件写入失败")
 	     	}
@@ -54,7 +47,7 @@ module.exports={
 			var j=0;
 			teacher_count=teacher[0].data[i][1];
 			teacher_count_array[k++]=teacher_count;
-			fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[i][0]+" "+subject[flag]+" "+(flag>2?1:0)+" \r\n"+arr+teacher[0].data[i][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+			fs.writeFileSync('./public/executefile/out.txt',teacher[0].data[i][0]+" "+subject[flag]+" "+((flag<2||flag>7)?0:1)+" \r\n"+arr+teacher[0].data[i][1]+"\r\n",{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
 				if(err){
 					console.log("文件写入失败")
 				}
@@ -251,7 +244,7 @@ module.exports={
 		};
 		json_transfer=json_transfer.split("\r\n");
 		json_transfer.length=json[0].length;
-		console.log(json_transfer);
+		console.log("ijk"+json_transfer);
 		for(var j=0;j<json_transfer.length;++j){
 			json_transfer[j]=json_transfer[j].split(" ");
 			json_transfer[j].length=json.length;
@@ -314,7 +307,6 @@ module.exports={
 				}
 			});
 		});
-		
 	},
 	get_schedule:function(id_type,callback){
 		var schedule=[];
@@ -426,14 +418,158 @@ module.exports={
 		};
 		callback(json_transfer);
 	},
-	run:function(callback){
-		child_process.execFile('class.bat',null,{cwd:'./public/executefile/'},function(error, stdout, stderr){
-			if(error){
-				throw error;
+	first_run:function(arg,callback){
+		fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
+        	if(err){
+            	console.log("error");
 			}
-			callback();
+			else{
+				fs.writeFileSync('./public/executefile/out_1.txt',"3 2 2 3 2 3\r\n",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+					if(err){
+						console.log("文件写入失败")
+					}else{
+					    console.log("文件写入成功");
+					}
+				});
+            	fs.writeFileSync('./public/executefile/out_1.txt',data,{flag:'a',encoding:'utf-8',mode:'0666'},function(err){
+					if(err){
+						console.log("文件写入失败")
+					}else{
+						console.log("文件写入成功");
+					}
+				});
+				fs.unlink('./public/executefile/out.txt', function(err) {
+					if (err) 
+						throw err;
+					console.log('文件删除成功');
+				});
+				fs.rename('./public/executefile/out_1.txt', './public/executefile/out.txt', function (err) {
+					if (err) throw err;
+					console.log('重命名完成');
+				});
+			}
+		});
+		fs.writeFileSync('./public/executefile/run.bat',"@echo off\r\n"+"@a.exe 10 1000 "+parameter,{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+			if(err){
+				console.log("文件写入失败")
+			}else{
+			    console.log("文件写入成功");
+			}
+		});
+
+		child_process.execFile("a.exe",["10","1000",arg],{cwd:'./public/executefile/'},function(error,stdout,stderr){
+			if(stdout==1){
+				var json={
+					code:"0",
+					msg:"排课成功"
+				}
+				callback(json);
+			}
+			if(stdout==0){
+				var json={
+					code:"500",
+					msg:"本次排课未获得理想结果"
+				}
+				callback(json);
+			}
 		});
 	},
+	repeat_run:function(arg,callback){
+		child_process.execFile("a.exe",["10","1000",arg],{cwd:'./public/executefile/'},function(error,stdout,stderr){
+			if(stdout==1){
+				var json={
+					code:"0",
+					msg:"排课成功"
+				}
+				callback(json);
+			}
+			if(stdout==0){
+				var json={
+					code:"500",
+					msg:"本次排课未获得理想结果"
+				}
+				callback(json);
+			}
+		});
+	},
+	// repeat_run:function(parameter,callback){
+	// 	fs.writeFile('./public/executefile/run.bat',"@echo off\r\n"+"@a.exe 10 1000 "+parameter,{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+	// 		if(err){
+	// 			console.log("文件写入失败");
+	// 		}else{
+	// 		    console.log("文件写入成功");
+	// 		}
+	// 	});
+	// 	fs.writeFileSync('./public/executefile/test.txt',"lkdsfgjklsdjklg",{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+	// 		if(err){
+	// 			console.log("文件写入失败")
+	// 		}
+	// 		else{
+	// 			console.log("dsjkhfjk");
+	// 		}
+	// 	});
+	// 	console.log("begin");
+
+	// 	// child_process.execFile('run.bat',null,{cwd:'./public/executefile/'},function(error, stdout, stderr){
+	// 	// 	console.log("运行已完成");
+	// 	// });
+
+	// 	// var timeinc=1;
+	// 	// while(true){
+	// 	// 	var temp=timeinc*timeinc;
+	// 	// 	time
+	// 	// }
+	// 	// fs.exists('./result.txt',function(exists){
+	// 	// 	if(exists){
+	// 	// 		console.log("success");
+	// 	// 	}
+	// 	// 	console.log("sdklfjkladffsd");
+	// 	// })
+
+	// 	// console.log("begin");
+	// 	// fs.exists('./result.txt',function(exists){
+	// 	// 	if(exists){
+	// 	// 		console.log("success");
+	// 	// 	}
+	// 	// 	console.log("sdklfjkladffsd");
+	// 	// });
+
+		
+	// 	// var flag=true;
+
+	// 		//下面这个就是同
+	// 		// fs.accessSync('./public/executefile/table.txt', function(err) {
+	// 		// 	console.log("03");
+	// 		// 	console.log(err ? '文件存在' : '文件不存在');
+	// 		// 	flag=false;
+	// 		var a;
+	// 		// });
+
+	// 	// };
+   
+
+	// 	// fs.access('./public/executefile/table.txt', function(err) {
+	// 	// 	console.log(err+"sdlkjfkl");
+	// 	// 	//flag=false;
+	// 	// });
+
+	// 	// var flag=true;
+	// 	// var f = function (x) {  
+	// 	// 	if (x === false) {  
+	// 	// 		var flag;
+	// 	// 		fs.accessSync('./public/executefile/table.txt', function(err) {
+	// 	// 			fs.readFile("./public/executefile/out.txt",'utf-8',function(err,data){
+	// 	// 				falg=data[0];
+	// 	// 			});
+	// 	// 		});
+	// 	// 		return flag;
+	// 	// 	} 
+	// 	// 	else {  
+	// 	// 		return f();  
+	// 	// 	}  
+	// 	// };  
+	// 	// console.log("end_2");
+	// },
 	get_analysis:function(callback){
 		fs.readFile("./public/executefile/analysis.txt",'utf-8',function(err,data){
         	if(err){

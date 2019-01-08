@@ -12,6 +12,8 @@ router.all('*', function(req, res, next) {
     next();
   });
 
+
+
 //注册
 router.post("/register",function(req,res){ 
     if(req.body.id==""||req.body.password_1==""||req.body.password_2==""||req.body.password_1!=req.body.password_2){
@@ -125,7 +127,22 @@ router.post("/limit",function(req,res){
         
 
 router.post("/test",function(req,res){
-    res.send("sorry");
+    var fs = require('fs'); // 引入fs模块
+    fs.writeFile('./try4.txt', 'HelloWorld', { 'flag': 'a' }, function(err) {
+        if (err) {
+            throw err;
+        }
+     
+        console.log('Hello.');
+     
+        // 写入成功后读取测试
+        fs.readFile('./try4.txt', 'utf-8', function(err, data) {
+            if (err) {
+                throw err;
+            }
+            console.log(data);
+        });
+    });
 });
 
 router.get("/getlist",function(req,res){
@@ -174,12 +191,14 @@ router.get("/get_schedule",function(req,res){
     });
 });
 
-router.get("/run",function(req,res){
-    server.run(function(){
-        var json={
-            "code":0,
-            "msg":"排课成功"
-        };
+router.get("/first_run",function(req,res){
+    server.first_run(req.query.least_number,function(json){
+        res.send(JSON.stringify(json));
+    });
+});
+
+router.get("/repeat_run",function(req,res){
+    server.repeat_run(req.query.least_number,function(json){
         res.send(JSON.stringify(json));
     });
 });
@@ -199,7 +218,6 @@ router.get("/get_student_list",function(req,res){
 
 router.post("/send_chosen_student",function(req,res){
     var data=req.body;
-    //console.log("1"+data);
     console.log(data);
     server.send_chosen_student(data,function(){
         res.end(JSON.stringify({
